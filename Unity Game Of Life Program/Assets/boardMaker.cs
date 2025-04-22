@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.Properties;
 using UnityEngine;
 
-public class boardMaker : MonoBehaviour
+public class BoardMaker : MonoBehaviour
 {
     public int columns, rows;
     public float scalar;
@@ -25,13 +25,19 @@ public class boardMaker : MonoBehaviour
                 board[i, j].GetComponent<Transform>().position = new Vector3(gameObject.GetComponent<Transform>().position.x + i, gameObject.GetComponent<Transform>().position.y - j, 0);
                 //naming the cell
                 board[i, j].name = "Cell: " + i + " " + j;
+                //giving the cell it's position in the grid
+                board[i, j].GetComponent<GridPosition>().xPos = i;
+                board[i, j].GetComponent<GridPosition>().yPos = j;
                 //coloring the cell black
                 board[i, j].GetComponent<SpriteRenderer>().color = Color.black;
 
             }
         }
         gameObject.GetComponent<Transform>().localScale = new Vector3(scalar, scalar, scalar);
-        SendMessage("ConnectToBoard");
+        if (!GetComponentInParent<GameOfLife>().connected)
+        {
+            GetComponentInParent<GameOfLife>().SendMessage("ConnectToBoard");
+        }
     }
     public GameObject[,] getBoard()
     {
